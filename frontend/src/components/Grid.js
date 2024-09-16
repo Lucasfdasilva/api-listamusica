@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import styled from "styled-components";
-import { FaTrash, FaEdit } from "react-icons/fa";
+import { FaTrash, FaEdit, FaMusic } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 const Table = styled.table`
@@ -47,37 +47,46 @@ const Grid = ({ users, setUsers, setOnEdit }) => {
   };
 
   const handleDelete = async (id) => {
-    await axios
-      .delete("http://localhost:8800/" + id)
-      .then(({ data }) => {
-        const newArray = users.filter((user) => user.id !== id);
-
-        setUsers(newArray);
-        toast.success(data);
-      })
-      .catch(({ data }) => toast.error(data));
-
-    setOnEdit(null);
+    // Exibe uma caixa de diálogo para confirmar a exclusão
+    const confirmDelete = window.confirm("Tem certeza que deseja apagar esta música?");
+  
+    // Se o usuário confirmar, procede com a exclusão
+    if (confirmDelete) {
+      await axios
+        .delete("http://localhost:8700/" + id)
+        .then(({ data }) => {
+          const newArray = users.filter((user) => user.id !== id);
+          setUsers(newArray);
+          toast.success(data);
+        })
+        .catch(({ data }) => toast.error(data));
+  
+      setOnEdit(null);
+    }
   };
 
   return (
     <Table>
       <Thead>
         <Tr>
-          <Th>Nome</Th>
-          <Th>Email</Th>
-          <Th onlyWeb>Fone</Th>
-          <Th></Th>
-          <Th></Th>
+          <Th>Música</Th>
+          <Th>Banda</Th>
+          <Th onlyWeb>Tom</Th>
+          <Th>Categoria</Th>
+          <Th>Cifra</Th>
         </Tr>
       </Thead>
       <Tbody>
         {users.map((item, i) => (
           <Tr key={i}>
-            <Td width="30%">{item.nome}</Td>
-            <Td width="30%">{item.email}</Td>
-            <Td width="20%" onlyWeb>
-              {item.fone}
+            <Td width="15%">{item.musica}</Td>
+            <Td width="15%">{item.banda}</Td>
+            <Td width="5%" onlyWeb>{item.tom}</Td>
+            <Td width="10%">{item.categoria}</Td>
+            <Td width="5%">
+              <a href={item.cifra} target="_blank" rel="noopener noreferrer">
+                <FaMusic />
+              </a>
             </Td>
             <Td alignCenter width="5%">
               <FaEdit onClick={() => handleEdit(item)} />

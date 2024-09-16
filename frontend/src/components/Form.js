@@ -37,6 +37,8 @@ const Button = styled.button`
   background-color: #2c73d2;
   color: white;
   height: 42px;
+  justify-content: center;
+
 `;
 
 const Form = ({ getUsers, onEdit, setOnEdit }) => {
@@ -46,10 +48,11 @@ const Form = ({ getUsers, onEdit, setOnEdit }) => {
     if (onEdit) {
       const user = ref.current;
 
-      user.nome.value = onEdit.nome;
-      user.email.value = onEdit.email;
-      user.fone.value = onEdit.fone;
-      user.data_nascimento.value = onEdit.data_nascimento;
+      user.musica.value = onEdit.musica;
+      user.banda.value = onEdit.banda;
+      user.tom.value = onEdit.tom;
+      user.categoria.value = onEdit.categoria;
+      user.cifra.value = onEdit.cifra;
     }
   }, [onEdit]);
 
@@ -59,40 +62,40 @@ const Form = ({ getUsers, onEdit, setOnEdit }) => {
     const user = ref.current;
 
     if (
-      !user.nome.value ||
-      !user.email.value ||
-      !user.fone.value ||
-      !user.data_nascimento.value
+      !user.musica.value 
     ) {
       return toast.warn("Preencha todos os campos!");
     }
 
     if (onEdit) {
       await axios
-        .put("http://localhost:8800/" + onEdit.id, {
-          nome: user.nome.value,
-          email: user.email.value,
-          fone: user.fone.value,
-          data_nascimento: user.data_nascimento.value,
+        .put("http://localhost:8700/" + onEdit.id, {
+          musica: user.musica.value,
+          banda: user.banda.value,
+          tom: user.tom.value,
+          categoria: user.categoria.value,
+          cifra: user.cifra.value,
         })
         .then(({ data }) => toast.success(data))
         .catch(({ data }) => toast.error(data));
     } else {
       await axios
-        .post("http://localhost:8800", {
-          nome: user.nome.value,
-          email: user.email.value,
-          fone: user.fone.value,
-          data_nascimento: user.data_nascimento.value,
+        .post("http://localhost:8700", {
+          musica: user.musica.value,
+          banda: user.banda.value,
+          tom: user.tom.value,
+          categoria: user.categoria.value,
+          cifra: user.cifra.value,
         })
         .then(({ data }) => toast.success(data))
         .catch(({ data }) => toast.error(data));
     }
 
-    user.nome.value = "";
-    user.email.value = "";
-    user.fone.value = "";
-    user.data_nascimento.value = "";
+    user.musica.value = "";
+    user.banda.value = "";
+    user.tom.value = "";
+    user.categoria.value = "";
+    user.cifra.value = "";
 
     setOnEdit(null);
     getUsers();
@@ -101,22 +104,25 @@ const Form = ({ getUsers, onEdit, setOnEdit }) => {
   return (
     <FormContainer ref={ref} onSubmit={handleSubmit}>
       <InputArea>
-        <Label>Nome</Label>
-        <Input name="nome" />
+        <Label>Música</Label>
+        <Input name="musica" />
       </InputArea>
       <InputArea>
-        <Label>E-mail</Label>
-        <Input name="email" type="email" />
+        <Label>Banda</Label>
+        <Input name="banda" />
       </InputArea>
       <InputArea>
-        <Label>Telefone</Label>
-        <Input name="fone" />
+        <Label>Tom</Label>
+        <Input name="tom" />
       </InputArea>
       <InputArea>
-        <Label>Data de Nascimento</Label>
-        <Input name="data_nascimento" type="date" />
+        <Label>Categoria</Label>
+        <Input name="categoria" />
       </InputArea>
-
+      <InputArea>
+        <Label>Cifra</Label>
+        <Input name="cifra" />
+      </InputArea>
       <Button type="submit">SALVAR</Button>
     </FormContainer>
   );
